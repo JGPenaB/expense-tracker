@@ -1,0 +1,56 @@
+<br>
+<div class="row">
+	<div class="col s12">
+		<div class="col s12" style="background-color: rgb(245,250,255); border-radius: 15px;">
+			
+			<!--contenido-->
+			<div class="col s12">
+				<br>
+				
+				<div class="row">
+					
+					<div class="col s12 m6 l6">
+						<button routerLink="../dashboard" class="waves-effect waves-teal btn-flat black white-text center" style="width:100%">
+							Volver al Dashboard
+						</button>
+					</div>
+					
+				</div>
+				
+				
+				<div class="col s12">
+					<p class="center"><b>Registros</b></p>
+					
+					<table class="highlight" *ngIf="showTable; else norecord">
+						<thead>
+							<tr>
+								<th scope="col">Fecha</th>
+								<th scope="col">Descripción</th>
+							</tr>
+						</thead>
+						<tbody>
+							<ng-container *ngFor="let rec of Records">
+								<tr>
+									<th scope="row">{{ rec.created_at }}</th>
+									<td> {{ rec.description }} </td>
+								</tr>
+							</ng-container>
+						</tbody>
+					</table>
+					<ng-template #norecord><p class="center"><i>Actualmente no ha hecho registros o transacciones.</i></p></ng-template>
+				</div>
+				
+						
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<div *ngIf="loading" class="valign-wrapper" style="position: fixed; top: 0px; left: 0px; bottom: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.3); z-index: 999;">
+  <mz-spinner
+  style="margin-left: auto; margin-right: auto;"
+    [color]="'green'"
+    [size]="'big'">
+  </mz-spinner>
+</div>

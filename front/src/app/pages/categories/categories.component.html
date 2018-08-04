@@ -1,0 +1,166 @@
+<br>
+<div class="row">
+	<div class="col s12">
+		<div class="col s12" style="background-color: rgb(245,250,255); border-radius: 15px;">
+			
+			<!--contenido-->
+			<div class="col s12">
+				<br>
+				
+				<div class="row">
+					
+					<div class="col s12 m6 l6">
+						<button routerLink="../dashboard" class="waves-effect waves-teal btn-flat black white-text center" style="width:100%">
+							Volver al Dashboard
+						</button>
+					</div>
+					
+					<div class='col s12 hide-on-med-and-up'>
+					</div>
+					
+					<div class="col s12 m6 l6">
+						<button (click)="catreg.open()" class="waves-effect waves-teal btn-flat black white-text center" style="width:100%">
+							<i mz-icon-mdi mz-input-prefix [icon]="'plus-box'"></i> Registrar Categoría
+						</button>
+					</div>
+					
+				</div>
+				
+				
+				<div class="col s12">
+					<p class="center"><b>Categorías</b></p>
+					
+					<table class="highlight" *ngIf="showTable; else norecord">
+						<thead>
+							<tr>
+								<th scope="col">Nombre</th>
+								<th scope="col">Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<ng-container *ngFor="let cate of Categories">
+								<tr>
+									<th scope="row">{{ cate.name }}</th>
+									<td> <a href="javascript:void(0);" (click)="EmpezarEdicion(cate.id, cated)">Editar</a> | <a href="javascript:void(0);" (click)="EmpezarEliminacion(cate.id, caterase)">Eliminar</a> </td>
+								</tr>
+							</ng-container>
+						</tbody>
+					</table>
+					<ng-template #norecord><p class="center"><i>Actualmente no posee categorías registradas.</i></p></ng-template>
+				</div>
+				
+						
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<!-- Form de registro -->
+<mz-modal #catreg [fixedFooter]="true" [bottomSheet]="false">
+  <mz-modal-header>
+    <h4 class="center-align">Registrar Categoría</h4>
+  </mz-modal-header>
+  <mz-modal-content>
+  
+	<form [formGroup]="registroForm" (ngSubmit)="onSubmit(catreg)" ngNativeValidate>
+						<div class="row">
+							<div class="input-field col s10  offset-s1">
+							<mz-input-container>
+								<i mz-icon-mdi mz-input-prefix
+								[icon]="'tag-plus'">
+								</i>
+								<input mz-input mz-validation 
+								id="name"
+								length="200"
+								formControlName="name"
+								type="text"
+								[errorMessageResource]="errorMsg.name"
+								[label]="'Nombre de la categoría'"
+								/>
+							</mz-input-container>
+							</div>
+						</div>
+
+						<div class="card-action center-align">
+						<button type="submit" class="waves-effect waves-teal btn-flat black white-text" style="width:55%;">
+							Registrar
+						</button>
+						</div>
+        
+					</form>
+  
+  </mz-modal-content>
+  <mz-modal-footer>
+    <button mz-button mz-modal-close class="waves-effect waves-teal btn-flat black white-text center" style="width:55%">Volver</button> 
+  </mz-modal-footer>
+</mz-modal>
+
+<!-- Form de edición -->
+<mz-modal #cated [fixedFooter]="true" [bottomSheet]="false">
+  <mz-modal-header>
+    <h4 class="center-align">Editar Categoría: {{ ActualCategory.name }}</h4>
+  </mz-modal-header>
+  <mz-modal-content>
+  
+	<form [formGroup]="editarForm" (ngSubmit)="onSubmitUpdate(cated)" ngNativeValidate>
+						<div class="row">
+							<div class="input-field col s10  offset-s1">
+							<mz-input-container>
+								<i mz-icon-mdi mz-input-prefix
+								[icon]="'tag'">
+								</i>
+								<input mz-input mz-validation 
+								id="name"
+								length="200"
+								formControlName="name"
+								type="text"
+								[errorMessageResource]="errorMsg.nameedit"
+								
+								/>
+							</mz-input-container>
+							</div>
+						</div>
+
+						<div class="card-action center-align">
+						<button type="submit" class="waves-effect waves-teal btn-flat black white-text" style="width:55%;">
+							Editar
+						</button>
+						</div>
+        
+					</form>
+  
+  </mz-modal-content>
+  <mz-modal-footer>
+    <button mz-button mz-modal-close class="waves-effect waves-teal btn-flat black white-text center" style="width:55%">Volver</button> 
+  </mz-modal-footer>
+</mz-modal>
+
+<!-- Modal de eliminación -->
+<mz-modal #caterase [fixedFooter]="true" [bottomSheet]="false">
+  <mz-modal-header>
+    <h4 class="center-align">Eliminar Categoría</h4>
+  </mz-modal-header>
+  <mz-modal-content>
+	<div class="center">
+	<p>¿Estás seguro que quieres eliminar la presente categoría?</p>
+	<p><b>Esto también eliminará las transacciones asociadas a la categoría</b></p>
+	
+	<button class="waves-effect waves-teal btn-flat red darken-4 white-text" style="width:55%;"(click)="EliminarCategoria(caterase)">
+	 Eliminar
+	</button>
+	</div>
+  </mz-modal-content>
+  <mz-modal-footer>
+    <button mz-button mz-modal-close class="waves-effect waves-teal btn-flat black white-text center" style="width:55%">Volver</button> 
+  </mz-modal-footer>
+</mz-modal>
+
+
+<div *ngIf="loading" class="valign-wrapper" style="position: fixed; top: 0px; left: 0px; bottom: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.3); z-index: 9999;">
+  <mz-spinner
+  style="margin-left: auto; margin-right: auto;"
+    [color]="'green'"
+    [size]="'big'">
+  </mz-spinner>
+</div>

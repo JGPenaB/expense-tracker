@@ -1,0 +1,103 @@
+<br>
+<div class="row">
+	<div class="col s12">
+		<div class="col s12" style="background-color: rgb(245,250,255); border-radius: 15px;">
+			
+			<!--contenido-->
+			<div class="col s12">
+				<br>
+				<div class="row">
+					
+					<div class="col s12 m6 l6">
+						<button routerLink="../categories" class="waves-effect waves-teal btn-flat black white-text center" style="width:100%">
+							Gestionar Categorías
+						</button>
+					</div>
+					
+					<div class='col s12 hide-on-med-and-up'>
+					</div>
+					
+					<div class="col s12 m6 l6">
+						<button routerLink="../transactions" class="waves-effect waves-teal btn-flat black white-text center" style="width:100%">
+							Gestionar Transacciones
+						</button>
+					</div>
+					
+				</div>
+				
+				
+				<div class="col s12 m6 l6">
+					<p class="center"><b>Últimas 5 transacciones</b></p>
+					
+					<table class="highlight" *ngIf="showTable; else norecord">
+						<thead>
+							<tr>
+								<th scope="col">Fecha</th>
+								<th scope="col">Categoría</th>
+								<th scope="col">Motivo</th>
+								<th scope="col">Monto</th>
+								<th scope="col">Tipo</th>
+							</tr>
+						</thead>
+						<tbody>
+						
+							<ng-container *ngFor="let trans of LastFive">
+								<tr>
+									<th scope="row">{{trans.date}}</th>
+									<td>{{ AdHocCategories[trans.category_id]}}</td>
+									<td>{{trans.subject}}</td>
+									<td>{{trans.amount}}</td>
+									<td>{{trans.type}}</td>
+								</tr>
+							</ng-container>
+							
+						</tbody>
+					</table>
+					
+					<ng-template #norecord><p class="center"><i>Actualmente no posee transacciones en el sistema.</i></p></ng-template>
+					
+					<button routerLink="../records" class="waves-effect waves-teal btn-flat black white-text center" style="width:100%">
+						Ver registros
+					</button>
+					<br><br>
+				</div>
+				
+				<div class="col s12 m6 l6" *ngIf="showTable; else nochart">
+					<p class="center"><b>Gráfico</b></p>
+					<canvas baseChart
+							[data]="pieChartData"
+							[labels]="pieChartLabels"
+							[chartType]="pieChartType"
+					></canvas>
+					<br>
+					<div class="col s12">
+						<button mz-button class="waves-effect waves-light btn-flat float blue darken-2 white-text center" style="width:50%" (click)="CambiarAMonto()">
+							Montos
+						</button>
+						
+						<button mz-button class="waves-effect waves-light btn-flat blue darken-2 white-text center" style="width:49%" (click)="CambiarACantidad()">
+							Transacciones
+						</button>
+					</div>
+					<br><br>
+				</div>
+				
+				<ng-template #nochart>
+				<div class="col s12 m6 l6">
+					<p class="center"><b>Gráfico</b></p>
+					<p class="center"><i>Actualmente no posee transacciones en el sistema.</i></p>
+				</div>
+				</ng-template>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<div *ngIf="loading" class="valign-wrapper" style="position: fixed; top: 0px; left: 0px; bottom: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.3); z-index: 999;">
+  <mz-spinner
+  style="margin-left: auto; margin-right: auto;"
+    [color]="'green'"
+    [size]="'big'">
+  </mz-spinner>
+</div>

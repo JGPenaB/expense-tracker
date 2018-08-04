@@ -1,0 +1,26 @@
+<div class="navbar-fixed">
+  <nav class="blue darken-4">
+    <div class="nav-wrapper">
+	  
+	  <div class="brand-logo"><img src="/assets/title.png" style="padding-top: 3px; height: 52px;"></div>
+	  
+	  <ul class="right">
+		
+		 <li *ngIf="user_exist">
+			<a (click)="this.user.logout()">Cerrar sesión</a>
+		</li>
+		
+	  </ul>
+    </div>
+  </nav>
+</div> 
+
+<router-outlet></router-outlet>
+
+<div *ngIf="loading" class="valign-wrapper" style="position: fixed; top: 0px; left: 0px; bottom: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.3); z-index: 999;">
+  <mz-spinner
+  style="margin-left: auto; margin-right: auto;"
+    [color]="'green'"
+    [size]="'big'">
+  </mz-spinner>
+</div>

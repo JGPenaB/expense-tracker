@@ -1,0 +1,55 @@
+<form class=" card" [formGroup]="loginForm" (ngSubmit)="onSubmit()" ngNativeValidate>
+        <h3 class="center-align"style="padding-top:10px;">  Inicio de sesión</h3>
+		<p class="center-align">¿No tienes una cuenta? <a routerLink="signup">¡Regístrate!</a></p>
+        <div class="row">
+          <div class="input-field col s10  offset-s1">
+            <mz-input-container>
+                <i mz-icon-mdi mz-input-prefix
+                  [icon]="'email'">
+                </i>
+                <input mz-input mz-validation 
+                  id="email"
+                  length="200"
+                  formControlName="email"
+                  type="email"
+                  [errorMessageResource]="errorMsg.email"
+                  [label]="'Email'"
+                  placeholder="Ejemplo@dominio.com" />
+              </mz-input-container>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s10 offset-s1">
+              <mz-input-container>
+                <i mz-icon-mdi mz-input-prefix
+                  [icon]="'textbox-password'">
+                </i>
+
+                <input mz-input mz-validation
+                  [label]="'Contraseña'"
+                  length="20"
+                  id="password"
+                  placeholder="Contraseña..."
+                  type="password"
+                  formControlName="password"
+                  [errorMessageResource]="errorMsg.password" />
+              </mz-input-container>
+          </div>
+        </div>
+
+        <div class="card-action center-align">
+          <button type="submit" class="waves-effect waves-teal btn-flat black white-text" style="width:55%;">
+            Ingresar
+          </button>
+        </div>
+        
+      </form>
+	  
+	  
+<div *ngIf="loading" class="valign-wrapper" style="position: fixed; top: 0px; left: 0px; bottom: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.3); z-index: 999;">
+  <mz-spinner
+  style="margin-left: auto; margin-right: auto;"
+    [color]="'green'"
+    [size]="'big'">
+  </mz-spinner>
+</div>

@@ -1,0 +1,438 @@
+<br>
+<div class="row">
+	<div class="col s12">
+		<div class="col s12" style="background-color: rgb(245,250,255); border-radius: 15px;">
+			
+			<!--contenido-->
+			<div class="col s12">
+				<br>
+				
+				<div class="row">
+					
+					<div class="col s12 m6 l6">
+						<button routerLink="../dashboard" class="waves-effect waves-teal btn-flat black white-text center" style="width:100%">
+							Volver al Dashboard
+						</button>
+					</div>
+					
+					<br class="hide-on-med-and-up"><br class="hide-on-med-and-up">
+					
+					<div class="col s12 m6 l6">
+						<button (click)="transreg.open()" class="waves-effect waves-teal btn-flat black white-text center" style="width:100%">
+							<i mz-icon-mdi mz-input-prefix [icon]="'plus-box'"></i> Registrar Transacción
+						</button>
+					</div>
+					
+				</div>
+						
+				<div class="col s12">
+					<p class="center"><b>Transacciones</b></p>
+					
+					<div class="col s12">
+					
+						<div class="col s12 m4 l4">
+						<button mz-button class="waves-effect waves-teal btn-flat float black white-text center" style="width:100%" (click)="TransaccionesSemanaPasada()">
+							Últimos 7 días
+						</button>
+						</div>
+						
+						<br class="hide-on-med-and-up"><br class="hide-on-med-and-up">
+						
+						<div class="col s12 m4 l4">
+						<button mz-button class="waves-effect waves-teal btn-flat black white-text center" style="width:100%" (click)="TransaccionesMesPasado()">
+							Último mes
+						</button>
+						</div>
+						
+						<br class="hide-on-med-and-up"><br class="hide-on-med-and-up">
+						
+						<div class="col s12 m4 l4">
+						<button mz-button class="waves-effect waves-teal btn-flat black white-text center" style="width:100%" (click)="TransaccionesPrimerDia()">
+							Último año
+						</button>
+						</div>
+						
+					</div>
+					
+					<br>
+					<table class="highlight" *ngIf="showTable; else norecord">
+						<thead>
+							<tr>
+								<th scope="col">ID</th>
+								<th scope="col">Fecha</th>
+								<th scope="col">Categoría</th>
+								<th scope="col">Motivo</th>
+								<th scope="col">Monto</th>
+								<th scope="col">Tipo</th>
+								<th scope="col">Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+						
+							<ng-container *ngFor="let trans of ListTransactions">
+								<tr>
+									<th scope="row"  (click)="VerTransaccion(trans.id, transview)">{{trans.id}}</th>
+									<th  (click)="VerTransaccion(trans.id, transview)">{{trans.date}}</th>
+									<td  (click)="VerTransaccion(trans.id, transview)">{{ AdHocCategories[trans.category_id] }}</td>
+									<td  (click)="VerTransaccion(trans.id, transview)">{{trans.subject}}</td>
+									<td  (click)="VerTransaccion(trans.id, transview)">{{trans.amount}}</td>
+									<td  (click)="VerTransaccion(trans.id, transview)">{{trans.type}}</td>
+									<td> <a href="javascript:void(0);" (click)="EmpezarEdicion(trans.id, transedit)">Editar</a> | <a href="javascript:void(0);" (click)="EmpezarEliminacion(trans.id, transerase)">Eliminar</a> </td>
+								</tr>
+							</ng-container>
+							
+						</tbody>
+					</table>
+					
+					<ng-template #norecord><p class="center"><i>Actualmente no posee transacciones registradas.</i></p></ng-template>
+				</div>
+				
+						
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<!-- Form de registro -->
+<mz-modal #transreg [fixedFooter]="true" [bottomSheet]="false">
+  <mz-modal-header>
+    <h4 class="center-align">Registrar Transacción</h4>
+  </mz-modal-header>
+  <mz-modal-content>
+  
+	<form [formGroup]="registroForm" (ngSubmit)="onSubmit(transreg)" ngNativeValidate>
+	
+						<!-- Subject -->
+						<div class="row">
+							<div class="input-field col s10  offset-s1">
+							<mz-input-container>
+								<i mz-icon-mdi mz-input-prefix
+								[icon]="'message'">
+								</i>
+								<input mz-input mz-validation 
+								id="subject"
+								length="200"
+								formControlName="subject"
+								type="text"
+								[errorMessageResource]="errorMsg.subject"
+								[label]="'Descripción'"
+								/>
+							</mz-input-container>
+							</div>
+						</div>
+						
+						<!-- Categoria -->
+						<div class="row">
+							<div class="input-field col s10 offset-s1">
+								<select mz-select mz-validation required
+									id="category"
+									formControlName="category"
+									[errorMessageResource]="errorMsg.category"
+                  
+									[label]="'Categoría'"
+									[placeholder]="'Seleccione la categoría'">
+									<option *ngFor="let cat of Categories" [ngValue]="cat.id">{{ cat.name }}</option>
+								</select>
+							</div>
+						</div>
+						
+						<!-- Monto -->
+						<div class="row">
+							<div class="input-field col s10  offset-s1">
+							<mz-input-container>
+								<i mz-icon-mdi mz-input-prefix
+								[icon]="'currency-usd'">
+								</i>
+								<input mz-input mz-validation 
+								id="amount"
+								length="200"
+								formControlName="amount"
+								type="text"
+								[errorMessageResource]="errorMsg.amount"
+								[label]="'Monto'"
+								placeholder="1 / 50 / 100..." 
+								/>
+							</mz-input-container>
+							</div>
+						</div>
+						
+						<!-- Fecha -->
+						<div class="row">
+							
+							<mz-datepicker-container class="col s10  offset-s1">
+								<i mz-icon-mdi mz-input-prefix
+								[icon]="'calendar'">
+								</i>
+								<input mz-datepicker mz-validation 
+								id="date"
+								formControlName="date"
+								type="text"
+								[errorMessageResource]="errorMsg.date"
+								[label]="'Fecha de la transacción'"
+								placeholder="Seleccione la fecha." 
+								>
+							</mz-datepicker-container>
+							
+						</div>
+						
+						<!-- Tipo -->
+						<div class="row">
+							<div class="input-field col s10 offset-s1">
+								<mz-select-container>
+								<select mz-select mz-validation required
+									id="type"
+									formControlName="type"
+									[errorMessageResource]="errorMsg.type"
+                  
+									[label]="'Tipo de transacción'"
+									[placeholder]="'Seleccione el tipo de transacción'">
+									
+									<option> Depósito </option>
+									<option> Retiro </option>
+								</select>
+								</mz-select-container>
+							</div>
+						</div>
+
+						
+						
+						<div class="card-action center-align">
+						<button type="submit" class="waves-effect waves-teal btn-flat black white-text" style="width:55%;">
+							Registrar
+						</button>
+						</div>
+        
+					</form>
+  
+  </mz-modal-content>
+  <mz-modal-footer>
+    <button mz-button mz-modal-close class="waves-effect waves-teal btn-flat black white-text center" style="width:55%">Volver</button> 
+  </mz-modal-footer>
+</mz-modal>
+
+<!-- Form de edición -->
+<mz-modal #transedit [fixedFooter]="true" [bottomSheet]="false">
+  <mz-modal-header>
+    <h4 class="center-align">Editar Transacción</h4>
+  </mz-modal-header>
+  <mz-modal-content>
+	
+	<form [formGroup]="editarForm" (ngSubmit)="onSubmitedit(transedit)" ngNativeValidate>
+	
+						<!-- Subject -->
+						<div class="row">
+							<div class="input-field col s10  offset-s1">
+							<mz-input-container>
+								<i mz-icon-mdi mz-input-prefix
+								[icon]="'message'">
+								</i>
+								<input mz-input mz-validation 
+								id="subject"
+								length="200"
+								formControlName="subject"
+								value="{{ ActualTransaction.subject }}"
+								type="text"
+								[errorMessageResource]="errorMsg.subject"
+								[label]="'Descripción'"
+								/>
+							</mz-input-container>
+							</div>
+						</div>
+						
+						<!-- Categoria -->
+						<div class="row">
+							<div class="input-field col s10 offset-s1">
+								<select mz-select mz-validation required
+									id="category"
+									formControlName="category"
+									[errorMessageResource]="errorMsg.category"
+									value="{{ ActualTransaction.category }}"
+									[label]="'Categoría'"
+									[placeholder]="'Seleccione la categoría'">
+									<option *ngFor="let cat of Categories" [ngValue]="cat.id">{{ cat.name }}</option>
+								</select>
+							</div>
+						</div>
+						
+						<!-- Monto -->
+						<div class="row">
+							<div class="input-field col s10  offset-s1">
+							<mz-input-container>
+								<i mz-icon-mdi mz-input-prefix
+								[icon]="'currency-usd'">
+								</i>
+								<input mz-input mz-validation 
+								id="amount"
+								length="200"
+								formControlName="amount"
+								value="{{ ActualTransaction.amount }}"
+								type="text"
+								[errorMessageResource]="errorMsg.amount"
+								[label]="'Monto'"
+								placeholder="1 / 50 / 100" 
+								/>
+							</mz-input-container>
+							</div>
+						</div>
+						
+						<!-- Fecha -->
+						<div class="row">
+							
+							<mz-datepicker-container class="col s10  offset-s1">
+								<i mz-icon-mdi mz-input-prefix
+								[icon]="'calendar'">
+								</i>
+								<input mz-datepicker mz-validation 
+								id="date"
+								formControlName="date"
+								value="{{ ActualTransaction.date }}"
+								type="text"
+								[errorMessageResource]="errorMsg.date"
+								[label]="'Fecha de la transacción'"
+								placeholder="Seleccione la fecha." 
+								>
+							</mz-datepicker-container>
+							
+						</div>
+						
+						<!-- Tipo -->
+						<div class="row">
+							<div class="input-field col s10 offset-s1">
+								<mz-select-container>
+								<select mz-select mz-validation required
+									id="type"
+									formControlName="type"
+									[errorMessageResource]="errorMsg.type"
+									value="{{ ActualTransaction.type }}"
+									[label]="'Tipo de transacción'"
+									[placeholder]="'Seleccione el tipo de transacción'">
+									
+									<option> Depósito </option>
+									<option> Retiro </option>
+								</select>
+								</mz-select-container>
+							</div>
+						</div>
+
+						
+						
+						<div class="card-action center-align">
+						<button type="submit" class="waves-effect waves-teal btn-flat black white-text" style="width:55%;">
+							Editar
+						</button>
+						</div>
+        
+					</form>
+	
+  </mz-modal-content>
+  <mz-modal-footer>
+    <button mz-button mz-modal-close class="waves-effect waves-teal btn-flat black white-text center" style="width:55%">Volver</button> 
+  </mz-modal-footer>
+</mz-modal>
+
+
+<!-- Modal de eliminación -->
+<mz-modal #transerase [fixedFooter]="true" [bottomSheet]="false">
+  <mz-modal-header>
+    <h4 class="center-align">Eliminar Transacción</h4>
+  </mz-modal-header>
+  <mz-modal-content>
+	<div class="center">
+	<p>¿Estás seguro que quieres eliminar la presente transacción?</p>
+	<p><b>Esta acción no se puede revertir</b></p>
+	
+	<button class="waves-effect waves-teal btn-flat red darken-4 white-text" style="width:55%;"(click)="EliminarTransaccion(transerase)">
+	 Eliminar
+	</button>
+	</div>
+  </mz-modal-content>
+  <mz-modal-footer>
+    <button mz-button mz-modal-close class="waves-effect waves-teal btn-flat black white-text center" style="width:55%">Volver</button> 
+  </mz-modal-footer>
+</mz-modal>
+
+
+<!-- Modal de visualización -->
+<mz-modal #transview [fixedFooter]="true" [bottomSheet]="false">
+  <mz-modal-header>
+    <h4 class="center-align">Transacción</h4>
+  </mz-modal-header>
+  <mz-modal-content>
+	
+						<div class="row">
+							<div class="col s5  offset-s1">
+								<p class="center"> <b>MOTIVO</b>:</p>
+							</div>
+							
+							<div class="col s5">
+								<p class="center">{{ ActualTransaction.subject }}</p>
+							</div>
+						</div>
+						
+						<div class="divider"></div>
+						
+						<!-- Categoria -->
+						<div class="row" *ngIf="showTable">
+							<div class="col s5  offset-s1">
+								<p class="center"> <b>CATEGORIA</b>:</p>
+							</div>
+							
+							<div class="col s5">
+								<p class="center">{{ AdHocCategories[ActualTransaction.category_id] }}</p>
+							</div>
+						</div>
+						
+						<div class="divider"></div>
+						
+						<!-- Monto -->
+						<div class="row">
+							<div class="col s5  offset-s1">
+								<p class="center"> <b>MONTO</b>:</p>
+							</div>
+							
+							<div class="col s5">
+								<p class="center">{{ ActualTransaction.amount }}</p>
+							</div>
+						</div>
+						
+						<div class="divider"></div>
+						
+						<!-- Fecha -->
+						<div class="row">
+							<div class="col s5  offset-s1">
+								<p class="center"> <b>FECHA</b>:</p>
+							</div>
+							
+							<div class="col s5">
+								<p class="center">{{ ActualTransaction.date }}</p>
+							</div>
+						</div>
+						
+						<div class="divider"></div>
+						
+						<!-- Tipo -->
+						<div class="row">
+							<div class="col s5  offset-s1">
+								<p class="center"> <b>TIPO</b>:</p>
+							</div>
+							
+							<div class="col s5">
+								<p class="center">{{ ActualTransaction.type }}</p>
+							</div>
+						</div>
+	
+  </mz-modal-content>
+  <mz-modal-footer>
+    <button mz-button mz-modal-close class="waves-effect waves-teal btn-flat black white-text center" style="width:55%">Volver</button> 
+  </mz-modal-footer>
+</mz-modal>
+
+
+<div *ngIf="loading" class="valign-wrapper" style="position: fixed; top: 0px; left: 0px; bottom: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.3); z-index: 9999;">
+  <mz-spinner
+  style="margin-left: auto; margin-right: auto;"
+    [color]="'green'"
+    [size]="'big'">
+  </mz-spinner>
+</div>
