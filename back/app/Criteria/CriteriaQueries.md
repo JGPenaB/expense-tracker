@@ -52,8 +52,8 @@ Y por último, en el controlador, se incluyen las clases creadas que extienden *
 
 ```php
 	public function ObtenerUsuario($id_user){
-		$this->category->pushCriteria(new UserEqualsID($id_user));
-		$user = $this->category->all($id_user);
+		$this->model->pushCriteria(new UserEqualsID($id_user));
+		$user = $this->model->all($id_user);
 		return response()->json(compact('user'));
 	}
 ```
@@ -67,8 +67,8 @@ El pushCriteria, en el caso de Eloquent, añade una cláusula *where()*, que des
 Si se añaden más condiciones:
 
 ```php
-$this->category->pushCriteria(new UserEqualsID($id_user));
-$this->category->pushCriteria(new UserOlderThan(Carbon::today()));
+$this->model->pushCriteria(new UserEqualsID($id_user));
+$this->model->pushCriteria(new UserOlderThan(Carbon::today()));
 ```
 
 Quedaría así:
